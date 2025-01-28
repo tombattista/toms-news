@@ -1,0 +1,58 @@
+<div class="stories-page-content">
+    <div class="content">
+        <h2>
+            Stories
+            
+        </h2>
+        <hr />
+        <div class="subheader-container">
+            <div class="subheader-item">
+                @if (!isUpdating && !newsStore.stories().length) {
+                        <h3>Search for stories using the <mat-icon class="search-icon">search</mat-icon> search button at the top right corner of the page.</h3>
+                }
+                @else {
+                    @if(this.currentQuery.length) {
+                        <span class="emphasis query-text">- "<span class="mat-headline">{{ this.currentQuery }}</span>"</span>
+                    }
+                }
+            </div>
+            <div class="subheader-item">
+                <mat-paginator #paginator 
+                    class="paginator" 
+                    [ariaDisabled]="totalStoryCount==0"
+                    [disabled]="totalStoryCount==0"
+                    [pageSizeOptions]="[10, 20, 50]"
+                    [pageSize]="pageSize"
+                    [length]="totalStoryCount"
+                    [pageIndex]="pageIndex"
+                    (page)="onPageEvent($event)">
+                </mat-paginator>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        @if (isUpdating) {
+            <app-loader message="Loading stories..."></app-loader>
+        }
+        @if (pageStories.length) {
+            <mat-list>
+                @if (pageStories.length) {
+                    @for(story of pageStories; track story.id; let isLast = $last; let i = $index) {
+                        <mat-list-item>
+                            <span matListItemTitle class="story-title">{{ (paginator.pageIndex * pageSize) + i + 1 }}. <span class="inset">{{ story.title }}</span></span>
+                            <span matListItemLine class="inset"><a class="story-link" href="{{ story.link }}" title="{{ story.title }} link">{{ story.link }}</a></span>
+                        </mat-list-item>
+                        @if (!isLast) {
+                            <mat-divider class="divider-inset"></mat-divider>
+                        }
+                    }
+                }
+                @else {
+                    @if (!isUpdating) {
+                        <h3>Search for stories using the <mat-icon class="search-icon">search</mat-icon> search button at the top right corner of the page.</h3>
+                    }
+                }
+            </mat-list>
+        }
+    </div>
+</div>
